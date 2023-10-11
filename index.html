@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS Multiple Async Requests demo</title>
+</head>
+<body>
+<h1>JS Multiple Async Requests demo</h1>
+
+<script>
+    async function runRequest(i, sleep) {
+        fetch(`http://localhost:8765/api?id=${i}&sleep=${sleep}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(res => {
+                if (res.status !== 200)
+                    throw new Error(String(res.status))
+
+                return res.json()
+            })
+            .then(res => {
+                const {data} = res
+                console.log(data)
+            })
+            .catch(err => console.error(`Fetch error: ${err}`))
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        runRequest(1, 1000)
+        runRequest(2, 200)
+        runRequest(3, 5000)
+        runRequest(4, 2500)
+        runRequest(5, 1500)
+    })
+</script>
+</body>
+</html>
